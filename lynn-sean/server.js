@@ -2,46 +2,27 @@
 
 const fs = require('fs');
 const express = require('express');
-
-// REVIEW: Require in body-parser for post requests in our server. If you want to know more about what this does, read the docs!
 const bodyParser = require('body-parser');
 const pg = require('pg');
 const PORT = process.env.PORT || 3000;
 const app = express();
-
-// TODO: Complete the connection string for the url that will connect to your local postgres database
-// Windows and Linux users; You should have retained the user/pw from the pre-work for this course.
-// Your url may require that it's composed of additional information including user and password
-// const conString = 'postgres://USER:PASSWORD@HOST:PORT/DBNAME';
-const conString = 'postgres://localhost:5432/lynn-sean'; //database github workflow question?
-
-// TODO: Our pg module has a Client constructor that accepts one argument: the conString we just defined.
-//       This is how it knows the URL and, for Windows and Linux users, our username and password for our
-//       database when client.connect is called on line 26. Thus, we need to pass our conString into our
-//       pg.Client() call.
+const conString = 'postgres://localhost:5432/lynn-sean';
 const client = new pg.Client(conString);
 
-// REVIEW: Use the client object to connect to our DB.
 client.connect();
 
-
-// REVIEW: Install/get the middleware plugins so that our app is aware and can use the body-parser module
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('./public'));
-
-
-// REVIEW: Routes for requesting HTML resources
 app.get('/new', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
+  // Request is #2 of our diagram requesting from the server.js file and the response from new.html is #5 of our diagram. The method used in article.js is .loadAll and .fetchAll. This would be the 'read' portion of the "CRUD". The line of code is handling a request/response for the new.html
   response.sendFile('new.html', {root: './public'});
 });
 
-
-// REVIEW: Routes for making API calls to use CRUD Operations on our database
 app.get('/articles', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // Put your response here...
+  // An AJAX request for articles DB to the server was from Article.fetchAll(), then the server forms that request into a SQL query to the database and returns to the user a response containing the results of the request. This is a CRUD "Read" operation that goes through numbers #2, #3, #4, and #5 in the drawing.
   client.query('SELECT * FROM articles')
   .then(function(result) {
     response.send(result.rows);
@@ -53,8 +34,8 @@ app.get('/articles', function(request, response) {
 
 app.post('/articles', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // Put your response here...
-  client.query(
+  // It is interacting with the Article.prototype.insertRecord method in the article.js file. It is using the 'Create' portion in "CRUD" It is getting a request from the client and processing that request and adding it to the database and giving a response of "insert complete" or giving an error message to the user. This line of code is using #1,#2,#3,#4 and #5 from our diagram.
+  client.query()
     `INSERT INTO
     articles(title, author, "authorUrl", category, "publishedOn", body)
     VALUES ($1, $2, $3, $4, $5, $6);
