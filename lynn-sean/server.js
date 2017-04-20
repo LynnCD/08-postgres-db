@@ -20,8 +20,6 @@ app.get('/new', function(request, response) {
   response.sendFile('new.html', {root: './public'});
 });
 
-
-// REVIEW: Routes for making API calls to use CRUD Operations on our database
 app.get('/articles', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
   // An AJAX request for articles DB to the server was from Article.fetchAll(), then the server forms that request into a SQL query to the database and returns to the user a response containing the results of the request. This is a CRUD "Read" operation that goes through numbers #2, #3, #4, and #5 in the drawing.
