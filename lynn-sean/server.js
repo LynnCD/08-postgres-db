@@ -116,7 +116,7 @@ app.delete('/articles', function(request, response) {
 });
 
 // COMMENT: What is this function invocation doing?
-// Loaddatabase is being invoked here.
+//
 loadDB();
 
 app.listen(PORT, function() {
