@@ -73,17 +73,6 @@ articleView.setTeasers = function() {
   });
 };
 
-articleView.initNewArticlePage = function() {
-  $('.tab-content').show();
-  $('#export-field').hide();
-  $('#article-json').on('focus', function(){
-    this.select();
-  });
-
-  $('#new-form').on('change', 'input, textarea', articleView.create);
-  $('#new-form').on('submit', articleView.submit);
-};
-
 articleView.create = function() {
   let article;
   $('#articles').empty();
@@ -102,10 +91,6 @@ articleView.create = function() {
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
-
-  $('#export-field').show();
-  $('#article-json').val(`${JSON.stringify(article)},`);
-};
 
 articleView.submit = function(event) {
   event.preventDefault();
