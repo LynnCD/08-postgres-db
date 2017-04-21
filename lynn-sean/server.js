@@ -20,8 +20,6 @@ app.get('/new', function(request, response) {
   response.sendFile('new.html', {root: './public'});
 });
 
-
-// REVIEW: Routes for making API calls to use CRUD Operations on our database
 app.get('/articles', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
   // An AJAX request for articles DB to the server was from Article.fetchAll(), then the server forms that request into a SQL query to the database and returns to the user a response containing the results of the request. This is a CRUD "Read" operation that goes through numbers #2, #3, #4, and #5 in the drawing.
@@ -58,14 +56,13 @@ app.post('/articles', function(request, response) {
     console.error(err);
   });
 });
-
+// :id means ANY VALUE
 app.put('/articles/:id', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // ?
+  //response: 3, 4, 5 from the png. The method used in article.js is the .updateRecord method. 'U', update is used from CRUD.
   client.query(
     `UPDATE articles
-    SET
-      title=$1, author=$2, "authorUrl"=$3, category=$4, "publishedOn"=$5, body=$6
+    SET title=$1, author=$2, "authorUrl"=$3, category=$4, "publishedOn"=$5, body=$6
     WHERE article_id=$7;
     `,
     [
@@ -77,7 +74,6 @@ app.put('/articles/:id', function(request, response) {
       request.body.body,
       request.params.id
     ]
-  )
   .then(function() {
     response.send('update complete')
   })
@@ -88,7 +84,7 @@ app.put('/articles/:id', function(request, response) {
 
 app.delete('/articles/:id', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // ?
+  //response: 3, 4, 5 from the png. The method used in article.js is the .deleteRecord method. 'D', delete is used from CRUD.
   client.query(
     `DELETE FROM articles WHERE article_id=$1;`,
     [request.params.id]
@@ -103,7 +99,7 @@ app.delete('/articles/:id', function(request, response) {
 
 app.delete('/articles', function(request, response) {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // ?
+ //response: 3, 4, 5 from the png. The method used in article.js is the .deleteRecord method. 'D', delete is used from CRUD.
   client.query(
     'DELETE FROM articles;'
   )
@@ -116,17 +112,19 @@ app.delete('/articles', function(request, response) {
 });
 
 // COMMENT: What is this function invocation doing?
-//
+// response: it loads our article.js database.
 loadDB();
 
 app.listen(PORT, function() {
   console.log(`Server started on port ${PORT}!`);
 });
 
+
+//////// ** DATABASE LOADER ** ////////
+////////////////////////////////////////
 function loadArticles() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
   // This code does not interact with the article.js file. It is using #3 and #4 from our diagram. It is awaiting the user's input to enter the String: SELECT COUNT(*) FROM articles. It will then return a count of all article's rows from the hackerIpsum.json.
-function loadArticles() {
   client.query('SELECT COUNT(*) FROM articles')
   .then(result => {
     if(!parseInt(result.rows[0].count)) {
